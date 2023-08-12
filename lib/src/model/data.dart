@@ -3,6 +3,7 @@ class GeoData {
   GeoData({
     required this.address,
     required this.city,
+    required this.county,
     required this.country,
     required this.latitude,
     required this.longitude,
@@ -13,6 +14,7 @@ class GeoData {
   });
   String address;
   String city;
+  String county;
   String country;
   double latitude;
   double longitude;

@@ -1,6 +1,7 @@
-import 'package:geocoder2/src/modal/data.dart';
-import 'package:geocoder2/src/modal/fetch_geocoder.dart';
 import 'package:http/http.dart' as http;
+
+import 'model/data.dart';
+import 'model/fetch_geocoder.dart';
 
 class Geocoder2 {
   ///Get City ,country , postalCode,state,streetNumber and countryCode from latitude and longitude
@@ -17,6 +18,7 @@ class Geocoder2 {
       String data = await response.stream.bytesToString();
       FetchGeocoder fetch = fetchGeocoderFromJson(data);
       String city = "";
+      String county = "";
       String country = "";
       String postalCode = "";
       String state = "";
@@ -24,13 +26,14 @@ class Geocoder2 {
       String countryCode = "";
       var addressComponent = fetch.results.first.addressComponents;
       for (var i = 0; i < addressComponent.length; i++) {
-        if (addressComponent[i].types.contains("administrative_area_level_2")) {
+        if (addressComponent[i].types.contains("locality")) {
           city = addressComponent[i].longName;
+        }
+        if (addressComponent[i].types.contains("administrative_area_level_2")) {
+          county = addressComponent[i].longName;
         }
         if (addressComponent[i].types.contains("country")) {
           country = addressComponent[i].longName;
-        }
-        if (addressComponent[i].types.contains("country")) {
           countryCode = addressComponent[i].shortName;
         }
         if (addressComponent[i].types.contains("postal_code")) {
@@ -47,6 +50,7 @@ class Geocoder2 {
       return GeoData(
         address: fetch.results.first.formattedAddress,
         city: city,
+        county: county,
         country: country,
         latitude: latitude,
         longitude: longitude,
@@ -75,6 +79,7 @@ class Geocoder2 {
       String data = await response.stream.bytesToString();
       FetchGeocoder fetch = fetchGeocoderFromJson(data);
       String city = "";
+      String county = "";
       String country = "";
       String postalCode = "";
       String state = "";
@@ -83,13 +88,14 @@ class Geocoder2 {
 
       var addressComponent = fetch.results.first.addressComponents;
       for (var i = 0; i < addressComponent.length; i++) {
-        if (addressComponent[i].types.contains("administrative_area_level_2")) {
+        if (addressComponent[i].types.contains("locality")) {
           city = addressComponent[i].longName;
+        }
+        if (addressComponent[i].types.contains("administrative_area_level_2")) {
+          county = addressComponent[i].longName;
         }
         if (addressComponent[i].types.contains("country")) {
           country = addressComponent[i].longName;
-        }
-        if (addressComponent[i].types.contains("country")) {
           countryCode = addressComponent[i].shortName;
         }
         if (addressComponent[i].types.contains("postal_code")) {
@@ -106,6 +112,7 @@ class Geocoder2 {
       return GeoData(
         address: fetch.results.first.formattedAddress,
         city: city,
+        county: county,
         country: country,
         latitude: fetch.results.first.geometry.location.lat,
         longitude: fetch.results.first.geometry.location.lng,
